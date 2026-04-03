@@ -1,53 +1,92 @@
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * EVENTS ARRAY — Edit this to add, remove, or update events.
+ *
+ * Each event supports:
+ *   id          — unique number
+ *   title       — event name
+ *   date        — "YYYY-MM-DD" format
+ *   image       — URL to event image (Unsplash, your own CDN, etc.)
+ *   location    — venue / address
+ *   description — short description shown on the card
+ *   tags        — array of category tags shown as chips (e.g. ["Health"], ["Education", "Youth"])
+ *
+ * The "Upcoming" / "Past" status is computed automatically from the date.
+ * No need to touch any other code when adding events.
+ */
 const EVENTS = [
   {
     id: 1,
-    title: "Swachh Bharat Abhiyan — Community Cleanliness Drive",
-    date: "2025-04-20",
-    image: "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=600&q=80",
-    description: "Join us for a city-wide cleanliness campaign in Ujjain. Volunteers will clean public spaces, plant trees, and spread awareness about sanitation.",
-    location: "Mahakal Temple Road, Ujjain",
+    title: "Poshak Daan — Winter Clothes Distribution",
+    date: "2025-01-15",
+    image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=600&q=80",
+    location: "Multiple locations, Ujjain",
+    description: "Collection and distribution of warm clothes, blankets, and essentials to homeless and destitute families ahead of winter.",
+    tags: ["Community", "Relief"],
   },
   {
     id: 2,
-    title: "Health Camp — Free Medical Checkup",
-    date: "2025-05-10",
-    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80",
-    description: "Free health checkups, blood tests, and medicine distribution for underprivileged families. Expert doctors will be available on site.",
-    location: "Community Hall, Freeganj, Ujjain",
+    title: "Makar Sankranti Blood Donation Camp",
+    date: "2025-01-14",
+    image: "https://images.unsplash.com/photo-1615461066159-fea0960485d5?w=600&q=80",
+    location: "Civil Hospital, Ujjain",
+    description: "A community blood donation drive held in collaboration with civil hospital. Over 80 units collected, benefiting hundreds of patients.",
+    tags: ["Health"],
   },
   {
     id: 3,
-    title: "Shiksha Utsav — Scholarship Distribution Ceremony",
-    date: "2025-06-05",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
-    description: "Annual scholarship awards for meritorious students from economically weaker sections. Over 50 students to be felicitated.",
-    location: "Vikram University Grounds, Ujjain",
+    title: "Swachh Bharat Abhiyan — Community Cleanliness Drive",
+    date: "2026-04-22",
+    image: "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=600&q=80",
+    location: "Mahakal Temple Road, Ujjain",
+    description: "Join us for a city-wide cleanliness campaign. Volunteers will clean public spaces, plant saplings, and spread awareness about sanitation.",
+    tags: ["Environment"],
   },
   {
     id: 4,
-    title: "Mahila Shakti Workshop — Women's Skill Development",
-    date: "2025-06-22",
-    image: "https://images.unsplash.com/photo-1573496358961-3c82861ab8f5?w=600&q=80",
-    description: "A two-day workshop empowering women with skills in tailoring, digital literacy, and entrepreneurship to support self-reliance.",
-    location: "Ninv Nishchay Centre, Ujjain",
+    title: "Health Camp — Free Medical Checkup",
+    date: "2026-05-10",
+    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80",
+    location: "Community Hall, Freeganj, Ujjain",
+    description: "Free health checkups, blood tests, and medicine distribution for underprivileged families. Expert doctors will be on site.",
+    tags: ["Health"],
   },
   {
     id: 5,
-    title: "Vriksh Mitra — Tree Plantation Drive",
-    date: "2025-07-14",
-    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
-    description: "Plantation of 500+ native trees across Ujjain district in collaboration with local schools and Gram Panchayats.",
-    location: "Various locations, Ujjain District",
+    title: "Shiksha Utsav — Scholarship Distribution Ceremony",
+    date: "2026-06-05",
+    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
+    location: "Vikram University Grounds, Ujjain",
+    description: "Annual scholarship awards for meritorious students from economically weaker sections. Over 50 students to be felicitated this year.",
+    tags: ["Education"],
   },
   {
     id: 6,
-    title: "Poshak Daan — Winter Clothes Distribution",
-    date: "2025-12-10",
-    image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=600&q=80",
-    description: "Collection and distribution of warm clothes, blankets, and essentials to homeless and destitute families ahead of winter.",
-    location: "Multiple locations, Ujjain",
+    title: "Mahila Shakti Workshop — Women's Skill Development",
+    date: "2026-06-22",
+    image: "https://images.unsplash.com/photo-1573496358961-3c82861ab8f5?w=600&q=80",
+    location: "Ninv Nishchay Centre, Ujjain",
+    description: "A two-day workshop empowering women with skills in tailoring, digital literacy, and entrepreneurship to support self-reliance.",
+    tags: ["Women", "Skills"],
+  },
+  {
+    id: 7,
+    title: "Vriksh Mitra — Tree Plantation Drive",
+    date: "2026-07-14",
+    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
+    location: "Various locations, Ujjain District",
+    description: "Plantation of 500+ native trees across Ujjain district in collaboration with local schools and Gram Panchayats.",
+    tags: ["Environment"],
+  },
+  {
+    id: 8,
+    title: "Annadaan Mahotsav — Community Feast & Food Drive",
+    date: "2026-09-02",
+    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80",
+    location: "Ram Ghat, Ujjain",
+    description: "A grand community feast serving thousands of underprivileged citizens, combined with dry ration distribution for 200+ families.",
+    tags: ["Nutrition", "Community"],
   },
 ];
 
@@ -341,7 +380,31 @@ function Programs() {
   );
 }
 
+function getEventStatus(dateStr: string): "Upcoming" | "Past" {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return new Date(dateStr) >= today ? "Upcoming" : "Past";
+}
+
+type FilterType = "All" | "Upcoming" | "Past";
+
 function Events() {
+  const [filter, setFilter] = useState<FilterType>("All");
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const upcomingCount = EVENTS.filter((e) => new Date(e.date) >= today).length;
+  const pastCount = EVENTS.filter((e) => new Date(e.date) < today).length;
+
+  const filtered = EVENTS.filter((ev) => {
+    if (filter === "All") return true;
+    return getEventStatus(ev.date) === filter;
+  }).sort((a, b) => {
+    if (filter === "Past") return new Date(b.date).getTime() - new Date(a.date).getTime();
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
+
   return (
     <section className="events" id="events">
       <div className="container">
@@ -353,29 +416,76 @@ function Events() {
           </p>
         </div>
 
-        <div className="events-grid">
-          {EVENTS.map((ev, i) => {
-            const dt = formatDate(ev.date);
-            return (
-              <div className="event-card reveal" key={ev.id} style={{ transitionDelay: `${i * 60}ms` }}>
-                <div className="event-img-wrap">
-                  <img className="event-img" src={ev.image} alt={ev.title} loading="lazy" />
-                  <div className="event-date-badge">
-                    <span className="event-date-day">{dt.day}</span>
-                    <span className="event-date-month">{dt.month}</span>
-                  </div>
-                </div>
-                <div className="event-body">
-                  <h3 className="event-title">{ev.title}</h3>
-                  <p className="event-desc">{ev.description}</p>
-                  <div className="event-meta">
-                    <span>📍</span> {ev.location}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="events-filter-bar reveal">
+          {(["All", "Upcoming", "Past"] as FilterType[]).map((f) => (
+            <button
+              key={f}
+              className={`events-filter-btn${filter === f ? " active" : ""}`}
+              onClick={() => setFilter(f)}
+            >
+              {f}
+              <span className="events-filter-count">
+                {f === "All" ? EVENTS.length : f === "Upcoming" ? upcomingCount : pastCount}
+              </span>
+            </button>
+          ))}
         </div>
+
+        {filtered.length === 0 ? (
+          <div className="events-empty">
+            <span>No {filter.toLowerCase()} events at the moment.</span>
+          </div>
+        ) : (
+          <div className="events-grid">
+            {filtered.map((ev, i) => {
+              const dt = formatDate(ev.date);
+              const status = getEventStatus(ev.date);
+              return (
+                <div
+                  className={`event-card reveal${status === "Past" ? " event-card--past" : ""}`}
+                  key={ev.id}
+                  style={{ transitionDelay: `${i * 55}ms` }}
+                >
+                  <div className="event-img-wrap">
+                    <img className="event-img" src={ev.image} alt={ev.title} loading="lazy" />
+
+                    <div className="event-status-pill" data-status={status}>
+                      {status === "Upcoming" ? "🟢 Upcoming" : "🕐 Past"}
+                    </div>
+
+                    <div className="event-date-badge">
+                      <span className="event-date-day">{dt.day}</span>
+                      <span className="event-date-month">{dt.month}</span>
+                      <span className="event-date-year">{dt.year}</span>
+                    </div>
+
+                    {status === "Past" && <div className="event-past-overlay" />}
+                  </div>
+
+                  <div className="event-body">
+                    <div className="event-tags">
+                      {ev.tags.map((tag) => (
+                        <span className="event-tag-chip" key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                    <h3 className="event-title">{ev.title}</h3>
+                    <p className="event-desc">{ev.description}</p>
+                    <div className="event-footer">
+                      <div className="event-meta">
+                        <span className="event-meta-icon">📍</span>
+                        <span>{ev.location}</span>
+                      </div>
+                      <div className="event-meta">
+                        <span className="event-meta-icon">📅</span>
+                        <span>{dt.full}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );
