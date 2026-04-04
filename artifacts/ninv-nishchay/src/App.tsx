@@ -58,7 +58,7 @@ const DEFAULT_EVENTS = [
     id: 6,
     title: "Mahila Shakti Workshop — Women's Skill Development",
     date: "2026-06-22",
-    image: "https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&q=80",
     location: "Ninv Nishchay Centre, Ujjain",
     description: "A two-day workshop empowering women with skills in tailoring, digital literacy, and entrepreneurship to support self-reliance.",
     tags: ["Women", "Skills"],
@@ -301,7 +301,7 @@ function About() {
           <div className="about-img-wrap reveal">
             <img
               className="about-img-main"
-              src="https://images.unsplash.com/photo-1578496479651-5e378b03c5e0?w=800&q=80"
+              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80"
               alt="Ninv Nishchay Foundation volunteers in India"
             />
             <div className="about-img-badge">
@@ -393,7 +393,7 @@ function Programs() {
       title: "Women Empowerment",
       icon: "👩‍💼",
       desc: "Vocational training, legal awareness camps, support for women entrepreneurs, and initiatives to combat gender-based violence.",
-      image: "https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&q=80",
       tag: "Women",
     },
     {
