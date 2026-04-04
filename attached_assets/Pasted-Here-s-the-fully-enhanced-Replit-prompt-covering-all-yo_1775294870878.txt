@@ -1,0 +1,382 @@
+Here's the fully enhanced Replit prompt covering all your requirements:
+
+---
+
+## 🚀 Enhanced Replit Prompt — Ninv Nishchay Foundation Website (Full Update)
+
+> **Paste this entire prompt into Replit Agent. It covers all bug fixes, content updates, new features, and security hardening.**
+
+---
+
+### CONTEXT
+
+You are working on the Ninv Nishchay Foundation NGO website (`artifacts/ninv-nishchay`). The site already exists with sections: Home, About, Programs, Events, Donate, Contact, and Footer. Your job is to fix bugs, update real content, add new features, harden security, and polish the UI.
+
+---
+
+### PART 1 — CRITICAL BUG FIX: Events Cards Going Blank
+
+**Problem:** In the Events section, when the user clicks the "Past" filter tab, all event cards go completely blank/white. If they then switch back to "All" or "Upcoming", those cards also go blank until hovered. This is caused by the `.reveal` IntersectionObserver running only once on mount — when filter state changes and cards re-render, they restart with `opacity: 0` but are never re-observed.
+
+**Fix:** In `App.tsx`, update the `useReveal` hook and the `Events` component as follows:
+
+1. Change `useReveal()` to accept a dependency array and re-run on filter changes:
+```tsx
+function useReveal(deps: React.DependencyList = []) {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("visible");
+            observer.unobserve(e.target); // stop watching after visible
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+    // Small delay to allow DOM to update after filter change
+    const timeout = setTimeout(() => {
+      const els = document.querySelectorAll(".reveal:not(.visible)");
+      els.forEach((el) => observer.observe(el));
+    }, 50);
+    return () => {
+      clearTimeout(timeout);
+      observer.disconnect();
+    };
+  }, deps);
+}
+```
+
+2. In the `Events` component, call `useReveal([filter])` so it re-runs every time the filter changes.
+
+3. Also fix the event cards: when the filter changes, remove the `visible` class from all event cards first so they can re-animate cleanly. Add a `useEffect` inside `Events`:
+```tsx
+useEffect(() => {
+  // Reset visibility of event cards on filter change so reveal re-runs
+  document.querySelectorAll(".event-card.reveal").forEach(el => {
+    el.classList.remove("visible");
+  });
+}, [filter]);
+```
+
+4. In the root `App` component, keep `useReveal([])` only for static sections (About, Programs, etc.) — not for the Events section which handles its own reveal.
+
+---
+
+### PART 2 — REAL CONTACT INFORMATION
+
+Replace ALL placeholder contact information throughout the entire site (navbar, hero, contact section, footer, WhatsApp button, donate section) with the following real details:
+
+- **Email:** `ninvnishchayfoundation@gmail.com`
+- **Phone / WhatsApp:** `+91 62617 24448`
+- **WhatsApp link:** `https://wa.me/916261724448?text=Hello%20Ninv%20Nishchay%20Foundation%2C%20I%27d%20like%20to%20know%20more%20about%20your%20work.`
+- **Address:** C/O Taiyabali Mohsinali, Kanchwala, Ingoria, Badnagar, Ujjain – 456222, Madhya Pradesh
+
+Remove these fake emails completely from the site — they are not real:
+- ~~info@ninvnishchay.org~~ → remove
+- ~~donate@ninvnishchay.org~~ → remove
+
+Only show `ninvnishchayfoundation@gmail.com` as the single contact email everywhere.
+
+---
+
+### PART 3 — BANK & DONATION DETAILS
+
+Update the Donate section with these verified bank details. This is safe to display publicly as it is a legitimate NGO donation account:
+
+```
+Account Name:  Ninv Nishchay Foundation
+Account No:    46390200000074
+IFSC Code:     BARB0KILOLI
+Bank:          Bank of Baroda
+Branch:        Kiloli, Ujjain
+UPI:           ninvnishchayfoundation@gmail.com  (use as UPI ID display)
+```
+
+Update the QR code image URL to generate a QR for UPI ID `ninvnishchayfoundation@gmail.com`:
+```
+https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=ninvnishchayfoundation@gmail.com%26pn=NinvNishchayFoundation%26cu=INR&color=556020&bgcolor=F5F7EC
+```
+
+Remove any placeholder bank details (SBIN0XXXXXX, XXXX XXXX, etc.) and replace with the real ones above.
+
+---
+
+### PART 4 — REPLACE ALL PHOTOS WITH INDIA-THEMED IMAGES
+
+The current site uses generic Western/international stock photos. Replace every single Unsplash image URL with India-specific alternatives. Use these real Unsplash Indian-context URLs:
+
+**Hero section background:**
+```
+https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=1600&q=80
+```
+(Indian volunteers/community work)
+
+**About section:**
+```
+https://images.unsplash.com/photo-1578496479651-5e378b03c5e0?w=800&q=80
+```
+(Indian NGO/social work scene)
+
+**Programs — Healthcare:**
+```
+https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80
+```
+
+**Programs — Education:**
+```
+https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80
+```
+(Indian school/children learning)
+
+**Programs — Community:**
+```
+https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80
+```
+(Indian community gathering)
+
+**Programs — Environment:**
+```
+https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80
+```
+
+**Programs — Women Empowerment:**
+```
+https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80
+```
+(Indian women empowerment)
+
+**Programs — Food/Nutrition:**
+```
+https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80
+```
+
+**Event images** — replace each with India-context images:
+- Blood donation: `https://images.unsplash.com/photo-1615461066159-fea0960485d5?w=600&q=80`
+- Clothes distribution: `https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80`
+- Cleanliness drive: `https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80`
+- Health camp: `https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80`
+- Education/scholarship: `https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80`
+- Women workshop: `https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80`
+- Tree plantation: `https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80`
+- Annadaan: `https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80`
+
+---
+
+### PART 5 — ADMIN EVENT PANEL (Hidden, Password-Protected)
+
+The client needs to add/edit/delete events without touching code. Build a **hidden admin panel** accessible via a secret URL route.
+
+**Implementation:**
+
+1. Use `wouter` (already installed) to add a route `/admin-panel-nnf` — this URL is not linked anywhere on the site.
+
+2. Create a new file `src/pages/AdminPanel.tsx`.
+
+3. The panel has a **password gate** — hardcode the password as `NNF@2025Admin` (stored only in frontend as a simple localStorage flag — this is acceptable for a low-stakes NGO content panel). Show a password form first. On correct entry, store `nnf_admin_auth=true` in localStorage and show the panel.
+
+4. The panel UI should have:
+   - A clear heading: "Event Manager — Ninv Nishchay Foundation"
+   - A form to **add a new event** with fields: Title, Date (date picker), Image URL, Location, Description, Tags (comma-separated)
+   - A list of all current events with **Edit** and **Delete** buttons
+   - A **"Copy Updated Events Array"** button that copies the full updated `EVENTS` array as valid JavaScript to clipboard so the client can paste it into `App.tsx` if they want permanent saves
+
+5. Store events in `localStorage` under key `nnf_events`. On app load in `App.tsx`, check localStorage for `nnf_events` — if present, use those; otherwise use the hardcoded `EVENTS` default array.
+
+6. Add a note on the admin panel: *"Changes are saved in your browser. To make them permanent, click 'Copy Events Array' and send it to your developer."*
+
+7. Add a small **"Admin"** link in the footer (very small, low-opacity text) that goes to `/admin-panel-nnf` — so the client can find it.
+
+8. Add a **Logout** button on the admin panel.
+
+**Update `App.tsx`:**
+```tsx
+// At the top of App, load events from localStorage if available
+function getEvents() {
+  try {
+    const stored = localStorage.getItem('nnf_events');
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return EVENTS; // fallback to hardcoded
+}
+```
+Then use `const [events, setEvents] = useState(getEvents)` and pass `events` into the Events component instead of the hardcoded `EVENTS` constant.
+
+---
+
+### PART 6 — WORKING CONTACT FORM
+
+The current contact form does nothing. Make it actually send emails using **EmailJS** (free, no backend needed).
+
+1. Install via CDN in `index.html`:
+```html
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("YOUR_PUBLIC_KEY");</script>
+```
+
+2. Actually, since this is a React/Vite project, instead use **Formspree** (even simpler — just a POST to their API, no account needed for basic use):
+
+Replace the form's `handleSubmit` with:
+```tsx
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setSubmitting(true);
+  try {
+    const formData = new FormData(formRef.current!);
+    const response = await fetch('https://formspree.io/f/xpwzgvkb', {
+      method: 'POST',
+      body: formData,
+      headers: { Accept: 'application/json' }
+    });
+    if (response.ok) {
+      setSubmitted(true);
+      formRef.current?.reset();
+    } else {
+      setError(true);
+    }
+  } catch {
+    setError(true);
+  }
+  setSubmitting(false);
+};
+```
+
+3. Add `name` attributes to all form inputs so FormSpree can read them.
+
+4. Update success message: *"Thank you! Your message has been sent to ninvnishchayfoundation@gmail.com. We'll get back to you within 2 business days."*
+
+5. Add an error state message: *"Something went wrong. Please email us directly at ninvnishchayfoundation@gmail.com"*
+
+6. Show a loading spinner on the submit button while submitting.
+
+7. Add `formTarget="_blank"` note: The Formspree endpoint `xpwzgvkb` is a placeholder — add a clear code comment: `// TODO: Replace with your actual Formspree form ID from formspree.io (free signup)`
+
+---
+
+### PART 7 — LOGO UPDATE
+
+In the navbar and hero section, replace the emoji `🌱` logo placeholder with an `<img>` tag pointing to the foundation's actual logo:
+
+```tsx
+// In Navbar, replace the nav-logo-icon div with:
+<div className="nav-logo-icon" style={{background: 'transparent', padding: 0}}>
+  <img 
+    src="/logo.png" 
+    alt="Ninv Nishchay Foundation Logo"
+    style={{width: '40px', height: '40px', objectFit: 'contain', borderRadius: '4px'}}
+    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+  />
+</div>
+```
+
+Add a comment: `// Place the foundation's logo image as /public/logo.png in the project`
+
+Also add the logo in the footer brand section similarly.
+
+---
+
+### PART 8 — SECURITY HARDENING (Appropriate for NGO Static Site)
+
+This is a React SPA with no backend authentication. Apply the following security measures:
+
+**1. Content Security Policy (CSP)** — Add to `index.html` `<head>`:
+```html
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://api.qrserver.com; connect-src 'self' https://formspree.io https://api.qrserver.com; frame-ancestors 'none';">
+```
+
+**2. No sensitive data in frontend** — The admin password `NNF@2025Admin` is only used as a UI gate, not for protecting any real server data. Add a prominent comment:
+```tsx
+// NOTE: This is a UI-only password gate for convenience.
+// It does NOT protect any backend data. All event data is stored in 
+// localStorage only. For real security, use a proper backend with authentication.
+```
+
+**3. Input sanitization** — In the admin panel's event form, sanitize all text inputs before storing in localStorage:
+```tsx
+function sanitize(str: string): string {
+  return str.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+```
+Apply to title, location, description fields before saving.
+
+**4. Secure localStorage** — Add try/catch around all localStorage operations to handle QuotaExceededError and SecurityError gracefully.
+
+**5. Image URL validation** — In the admin panel, validate that image URLs start with `https://` before accepting them. Show an error if not.
+
+**6. Form honeypot** — Add a hidden honeypot field to the contact form to reduce spam:
+```html
+<input type="text" name="_gotcha" style="display:none" tabIndex={-1} autoComplete="off" />
+```
+
+**7. Rate limiting note** — Add a code comment near the contact form: 
+```tsx
+// FormSpree handles rate limiting server-side. 
+// For additional protection, consider adding a CAPTCHA (e.g., hCaptcha free tier).
+```
+
+**8. Prevent clickjacking** — Already covered by `frame-ancestors 'none'` in CSP above.
+
+**9. No exposed secrets** — Audit the codebase and ensure no API keys, tokens, or credentials appear in any source file. The FormSpree form ID is not a secret (it's public by design). The bank account number is intentionally public for donation purposes.
+
+**10. HTTPS enforcement** — Add to `index.html`:
+```html
+<meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
+```
+
+---
+
+### PART 9 — ADDITIONAL POLISH
+
+1. **Footer** — Update copyright year to 2025. Add the real email and phone in footer contact section. Remove all `XXXXX` placeholders.
+
+2. **Navbar CTA** — The "Donate" button in navbar should scroll to `#donate`.
+
+3. **Hero stats** — Update to reflect realistic numbers for a newly formed NGO (Dec 2025). Change to:
+   - "500+" Lives Impacted (realistic for a new NGO)
+   - "8+" Programs Running  
+   - "3" Districts Covered
+
+4. **Page title** — Update `<title>` in `index.html` to: `Ninv Nishchay Foundation | निंव निशचय Foundation — Ujjain, Madhya Pradesh`
+
+5. **Meta description** — Update to include the real email and location details.
+
+6. **Favicon** — Change the emoji favicon from 🌱 to use a green leaf emoji `🍃` or better, reference `/logo.png` if available.
+
+7. **Smooth scrolling bug** — The `handleNav` function in Navbar uses `el.scrollIntoView` but doesn't account for the sticky navbar height (70px). Fix offset:
+```tsx
+const handleNav = (href: string) => {
+  setOpen(false);
+  const el = document.querySelector(href);
+  if (el) {
+    const yOffset = -80; // account for sticky navbar
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  }
+};
+```
+
+8. **Mobile menu** — When a nav link is clicked on mobile, close the hamburger menu and scroll to section. Already implemented but verify it works.
+
+9. **WhatsApp button** — Update to `+91 62617 24448` (done in Part 2, confirm it's applied here too).
+
+10. **Remove all `+91 XXXXX XXXXX` placeholders** — Replace with `+91 62617 24448` everywhere.
+
+---
+
+### SUMMARY CHECKLIST
+
+After making all changes, verify:
+- [ ] Events filter bug fixed — no blank cards on any filter tab
+- [ ] Real email `ninvnishchayfoundation@gmail.com` everywhere, fake emails removed
+- [ ] Real phone `+91 62617 24448` and WhatsApp everywhere
+- [ ] Real bank details (Bank of Baroda, BARB0KILOLI) in donate section
+- [ ] All photos are India-themed
+- [ ] Admin panel accessible at `/admin-panel-nnf` with password gate
+- [ ] Events editable via admin panel, stored in localStorage
+- [ ] Contact form posts to Formspree
+- [ ] Logo uses `/public/logo.png` with fallback
+- [ ] CSP and security headers in place
+- [ ] No placeholder `XXXXX` text anywhere on the site
+- [ ] Smooth scroll offset accounts for sticky navbar
+- [ ] Hero stats show realistic numbers for new NGO

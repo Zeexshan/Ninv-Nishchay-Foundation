@@ -1,26 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import { Router, Route, Switch } from "wouter";
+import AdminPanel from "./pages/AdminPanel";
 
-/**
- * EVENTS ARRAY — Edit this to add, remove, or update events.
- *
- * Each event supports:
- *   id          — unique number
- *   title       — event name
- *   date        — "YYYY-MM-DD" format
- *   image       — URL to event image (Unsplash, your own CDN, etc.)
- *   location    — venue / address
- *   description — short description shown on the card
- *   tags        — array of category tags shown as chips (e.g. ["Health"], ["Education", "Youth"])
- *
- * The "Upcoming" / "Past" status is computed automatically from the date.
- * No need to touch any other code when adding events.
- */
-const EVENTS = [
+/* ─── EVENTS DEFAULT DATA ─────────────────────────────────────────────────────
+ * Edit this array to add, remove, or update events.
+ * Fields: id, title, date (YYYY-MM-DD), image (https URL), location, description, tags[]
+ * "Upcoming" / "Past" status is auto-computed from the date — no manual tag needed.
+ * Changes made via the Admin Panel (/admin-panel-nnf) override this array in localStorage.
+ * ─────────────────────────────────────────────────────────────────────────── */
+const DEFAULT_EVENTS = [
   {
     id: 1,
     title: "Poshak Daan — Winter Clothes Distribution",
     date: "2025-01-15",
-    image: "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80",
     location: "Multiple locations, Ujjain",
     description: "Collection and distribution of warm clothes, blankets, and essentials to homeless and destitute families ahead of winter.",
     tags: ["Community", "Relief"],
@@ -38,7 +31,7 @@ const EVENTS = [
     id: 3,
     title: "Swachh Bharat Abhiyan — Community Cleanliness Drive",
     date: "2026-04-22",
-    image: "https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
     location: "Mahakal Temple Road, Ujjain",
     description: "Join us for a city-wide cleanliness campaign. Volunteers will clean public spaces, plant saplings, and spread awareness about sanitation.",
     tags: ["Environment"],
@@ -47,7 +40,7 @@ const EVENTS = [
     id: 4,
     title: "Health Camp — Free Medical Checkup",
     date: "2026-05-10",
-    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
     location: "Community Hall, Freeganj, Ujjain",
     description: "Free health checkups, blood tests, and medicine distribution for underprivileged families. Expert doctors will be on site.",
     tags: ["Health"],
@@ -56,7 +49,7 @@ const EVENTS = [
     id: 5,
     title: "Shiksha Utsav — Scholarship Distribution Ceremony",
     date: "2026-06-05",
-    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
     location: "Vikram University Grounds, Ujjain",
     description: "Annual scholarship awards for meritorious students from economically weaker sections. Over 50 students to be felicitated this year.",
     tags: ["Education"],
@@ -65,7 +58,7 @@ const EVENTS = [
     id: 6,
     title: "Mahila Shakti Workshop — Women's Skill Development",
     date: "2026-06-22",
-    image: "https://images.unsplash.com/photo-1573496358961-3c82861ab8f5?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80",
     location: "Ninv Nishchay Centre, Ujjain",
     description: "A two-day workshop empowering women with skills in tailoring, digital literacy, and entrepreneurship to support self-reliance.",
     tags: ["Women", "Skills"],
@@ -90,6 +83,19 @@ const EVENTS = [
   },
 ];
 
+export type NNFEvent = typeof DEFAULT_EVENTS[0];
+
+/** Load events from localStorage (set by Admin Panel), or fall back to defaults. */
+function loadEvents(): NNFEvent[] {
+  try {
+    const stored = localStorage.getItem("nnf_events");
+    if (stored) return JSON.parse(stored);
+  } catch {
+    // QuotaExceededError or SecurityError — silently fall back
+  }
+  return DEFAULT_EVENTS;
+}
+
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
   return {
@@ -100,24 +106,67 @@ function formatDate(dateStr: string) {
   };
 }
 
-function useReveal() {
+/** Re-runs IntersectionObserver whenever deps change so filter changes re-animate cards. */
+function useReveal(deps: React.DependencyList = []) {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
             e.target.classList.add("visible");
+            observer.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.05 }
     );
-    const els = document.querySelectorAll(".reveal");
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+    // Small delay to let DOM settle after state change
+    const timeout = setTimeout(() => {
+      const els = document.querySelectorAll(".reveal:not(.visible)");
+      els.forEach((el) => observer.observe(el));
+    }, 50);
+    return () => {
+      clearTimeout(timeout);
+      observer.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }
 
+/* ─── SMOOTH SCROLL WITH NAVBAR OFFSET ───────────────────────────────────── */
+function scrollTo(href: string) {
+  const el = document.querySelector(href);
+  if (el) {
+    const yOffset = -80; // account for 70px sticky navbar + breathing room
+    const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+}
+
+/* ─── LOGO ─────────────────────────────────────────────────────────────────
+ * Place the foundation's real logo as /public/logo.png to activate it.
+ * Falls back to the emoji icon if logo.png is not found.
+ * ────────────────────────────────────────────────────────────────────────── */
+function LogoIcon({ size = 40 }: { size?: number }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return (
+      <div className="nav-logo-icon" style={{ fontSize: size * 0.55 }}>🌱</div>
+    );
+  }
+  return (
+    <div className="nav-logo-icon" style={{ background: "transparent", padding: 0 }}>
+      <img
+        src="/logo.png"
+        alt="Ninv Nishchay Foundation Logo"
+        style={{ width: size, height: size, objectFit: "contain", borderRadius: 4 }}
+        onError={() => setFailed(true)}
+      />
+    </div>
+  );
+}
+
+/* ─── NAVBAR ────────────────────────────────────────────────────────────── */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -139,16 +188,15 @@ function Navbar() {
 
   const handleNav = (href: string) => {
     setOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    scrollTo(href);
   };
 
   return (
     <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
       <div className="container">
         <div className="nav-inner">
-          <a href="#home" className="nav-logo" onClick={() => handleNav("#home")}>
-            <div className="nav-logo-icon">🌱</div>
+          <a href="#home" className="nav-logo" onClick={(e) => { e.preventDefault(); handleNav("#home"); }}>
+            <LogoIcon size={40} />
             <div className="nav-logo-text">
               <span className="nav-logo-name">Ninv Nishchay</span>
               <span className="nav-logo-tag">Foundation</span>
@@ -184,10 +232,14 @@ function Navbar() {
   );
 }
 
+/* ─── HERO ──────────────────────────────────────────────────────────────── */
 function Hero() {
   return (
     <section className="hero" id="home">
-      <div className="hero-bg" />
+      <div
+        className="hero-bg"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=1600&q=80')" }}
+      />
       <div className="hero-overlay" />
       <div className="hero-pattern" />
       <div className="container" style={{ width: "100%", display: "flex", flexDirection: "column" }}>
@@ -206,14 +258,14 @@ function Hero() {
             <a
               href="#donate"
               className="btn-primary"
-              onClick={(e) => { e.preventDefault(); document.querySelector("#donate")?.scrollIntoView({ behavior: "smooth" }); }}
+              onClick={(e) => { e.preventDefault(); scrollTo("#donate"); }}
             >
               💛 Donate Now
             </a>
             <a
               href="#about"
               className="btn-secondary"
-              onClick={(e) => { e.preventDefault(); document.querySelector("#about")?.scrollIntoView({ behavior: "smooth" }); }}
+              onClick={(e) => { e.preventDefault(); scrollTo("#about"); }}
             >
               Learn More →
             </a>
@@ -222,15 +274,15 @@ function Hero() {
 
         <div className="hero-stats">
           <div className="hero-stat">
-            <span className="hero-stat-num">2500+</span>
+            <span className="hero-stat-num">500+</span>
             <span className="hero-stat-label">Lives Impacted</span>
           </div>
           <div className="hero-stat">
-            <span className="hero-stat-num">12+</span>
+            <span className="hero-stat-num">8+</span>
             <span className="hero-stat-label">Programs Running</span>
           </div>
           <div className="hero-stat">
-            <span className="hero-stat-num">5</span>
+            <span className="hero-stat-num">3</span>
             <span className="hero-stat-label">Districts Covered</span>
           </div>
         </div>
@@ -240,6 +292,7 @@ function Hero() {
   );
 }
 
+/* ─── ABOUT ─────────────────────────────────────────────────────────────── */
 function About() {
   return (
     <section className="about" id="about">
@@ -248,8 +301,8 @@ function About() {
           <div className="about-img-wrap reveal">
             <img
               className="about-img-main"
-              src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800&q=80"
-              alt="Ninv Nishchay Foundation volunteers"
+              src="https://images.unsplash.com/photo-1578496479651-5e378b03c5e0?w=800&q=80"
+              alt="Ninv Nishchay Foundation volunteers in India"
             />
             <div className="about-img-badge">
               <span className="about-img-badge-num">2025</span>
@@ -305,41 +358,42 @@ function About() {
   );
 }
 
+/* ─── PROGRAMS ──────────────────────────────────────────────────────────── */
 function Programs() {
   const programs = [
     {
       title: "Healthcare & Wellness",
       icon: "🏥",
       desc: "Free medical camps, medicines, and health awareness drives for underprivileged families in rural and urban slums across Ujjain district.",
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
       tag: "Health",
     },
     {
       title: "Education & Scholarships",
       icon: "📚",
       desc: "Scholarships for meritorious students, digital literacy training, free coaching classes, and school supply distribution for children from EWS families.",
-      image: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
       tag: "Education",
     },
     {
       title: "Community Development",
       icon: "🏘️",
       desc: "Skill development workshops, livelihood support, women's self-help groups, and infrastructure projects to uplift entire communities.",
-      image: "https://images.unsplash.com/photo-1509099836639-18ba1795216d?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
       tag: "Community",
     },
     {
       title: "Environment & Green India",
       icon: "🌳",
       desc: "Plantation drives, cleanliness campaigns, waste management awareness, and river conservation activities across Madhya Pradesh.",
-      image: "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
       tag: "Environment",
     },
     {
       title: "Women Empowerment",
       icon: "👩‍💼",
       desc: "Vocational training, legal awareness camps, support for women entrepreneurs, and initiatives to combat gender-based violence.",
-      image: "https://images.unsplash.com/photo-1573496358961-3c82861ab8f5?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80",
       tag: "Women",
     },
     {
@@ -380,6 +434,7 @@ function Programs() {
   );
 }
 
+/* ─── EVENTS ────────────────────────────────────────────────────────────── */
 function getEventStatus(dateStr: string): "Upcoming" | "Past" {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -388,22 +443,31 @@ function getEventStatus(dateStr: string): "Upcoming" | "Past" {
 
 type FilterType = "All" | "Upcoming" | "Past";
 
-function Events() {
+function Events({ events }: { events: NNFEvent[] }) {
   const [filter, setFilter] = useState<FilterType>("All");
+
+  // Reset card visibility when filter changes so reveal re-animates
+  useEffect(() => {
+    document.querySelectorAll(".event-card.reveal").forEach((el) => {
+      el.classList.remove("visible");
+    });
+  }, [filter]);
+
+  // Re-run reveal observer on filter change
+  useReveal([filter]);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const upcomingCount = EVENTS.filter((e) => new Date(e.date) >= today).length;
-  const pastCount = EVENTS.filter((e) => new Date(e.date) < today).length;
+  const upcomingCount = events.filter((e) => new Date(e.date) >= today).length;
+  const pastCount = events.filter((e) => new Date(e.date) < today).length;
 
-  const filtered = EVENTS.filter((ev) => {
-    if (filter === "All") return true;
-    return getEventStatus(ev.date) === filter;
-  }).sort((a, b) => {
-    if (filter === "Past") return new Date(b.date).getTime() - new Date(a.date).getTime();
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
-  });
+  const filtered = events
+    .filter((ev) => filter === "All" || getEventStatus(ev.date) === filter)
+    .sort((a, b) => {
+      if (filter === "Past") return new Date(b.date).getTime() - new Date(a.date).getTime();
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
 
   return (
     <section className="events" id="events">
@@ -425,7 +489,7 @@ function Events() {
             >
               {f}
               <span className="events-filter-count">
-                {f === "All" ? EVENTS.length : f === "Upcoming" ? upcomingCount : pastCount}
+                {f === "All" ? events.length : f === "Upcoming" ? upcomingCount : pastCount}
               </span>
             </button>
           ))}
@@ -448,20 +512,16 @@ function Events() {
                 >
                   <div className="event-img-wrap">
                     <img className="event-img" src={ev.image} alt={ev.title} loading="lazy" />
-
                     <div className="event-status-pill" data-status={status}>
                       {status === "Upcoming" ? "🟢 Upcoming" : "🕐 Past"}
                     </div>
-
                     <div className="event-date-badge">
                       <span className="event-date-day">{dt.day}</span>
                       <span className="event-date-month">{dt.month}</span>
                       <span className="event-date-year">{dt.year}</span>
                     </div>
-
                     {status === "Past" && <div className="event-past-overlay" />}
                   </div>
-
                   <div className="event-body">
                     <div className="event-tags">
                       {ev.tags.map((tag) => (
@@ -491,6 +551,7 @@ function Events() {
   );
 }
 
+/* ─── DONATE ────────────────────────────────────────────────────────────── */
 function Donate() {
   return (
     <section className="donate" id="donate">
@@ -501,7 +562,7 @@ function Donate() {
             <h2 className="section-heading">Support Our Mission</h2>
             <p className="donate-message">
               Your generous contribution — no matter the size — helps us deliver healthcare, education,
-              and hope to thousands of families across Madhya Pradesh. Every rupee goes directly to
+              and hope to hundreds of families across Madhya Pradesh. Every rupee goes directly to
               those who need it most.
             </p>
             <p className="donate-message" style={{ marginTop: "-12px" }}>
@@ -517,23 +578,23 @@ function Donate() {
               </div>
               <div className="bank-row">
                 <span className="bank-label">Account No.</span>
-                <span className="bank-value">XXXX XXXX XXXX 0001</span>
+                <span className="bank-value">46390200000074</span>
               </div>
               <div className="bank-row">
                 <span className="bank-label">IFSC Code</span>
-                <span className="bank-value">SBIN0XXXXXX</span>
+                <span className="bank-value">BARB0KILOLI</span>
               </div>
               <div className="bank-row">
                 <span className="bank-label">Bank</span>
-                <span className="bank-value">State Bank of India</span>
+                <span className="bank-value">Bank of Baroda</span>
               </div>
               <div className="bank-row">
                 <span className="bank-label">Branch</span>
-                <span className="bank-value">Freeganj, Ujjain</span>
+                <span className="bank-value">Kiloli, Ujjain</span>
               </div>
               <div className="bank-row">
                 <span className="bank-label">UPI ID</span>
-                <span className="bank-value">ninvnishchay@upi</span>
+                <span className="bank-value">ninvnishchayfoundation@gmail.com</span>
               </div>
             </div>
           </div>
@@ -542,12 +603,12 @@ function Donate() {
             <div className="qr-box">
               <img
                 className="qr-code"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=ninvnishchay@upi%26pn=NinvNishchayFoundation%26cu=INR&color=556020&bgcolor=F5F7EC"
-                alt="QR Code for UPI Donation"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=ninvnishchayfoundation@gmail.com%26pn=NinvNishchayFoundation%26cu=INR&color=556020&bgcolor=F5F7EC"
+                alt="UPI QR Code — ninvnishchayfoundation@gmail.com"
               />
               <div className="qr-title">Ninv Nishchay Foundation</div>
               <div className="qr-sub">Scan to donate via any UPI app</div>
-              <div className="upi-id">ninvnishchay@upi</div>
+              <div className="upi-id">ninvnishchayfoundation@gmail.com</div>
             </div>
             <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.82rem", textAlign: "center", maxWidth: "280px" }}>
               PayTM · PhonePe · Google Pay · BHIM · any UPI app
@@ -559,15 +620,37 @@ function Donate() {
   );
 }
 
+/* ─── CONTACT ───────────────────────────────────────────────────────────── */
 function Contact() {
   const formRef = useRef<HTMLFormElement>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // FormSpree handles rate limiting server-side.
+  // For additional protection, consider adding a CAPTCHA (e.g., hCaptcha free tier).
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    formRef.current?.reset();
-    setTimeout(() => setSubmitted(false), 5000);
+    setSubmitting(true);
+    setError(false);
+    try {
+      const formData = new FormData(formRef.current!);
+      const response = await fetch("https://formspree.io/f/xreoywlg", {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+      if (response.ok) {
+        setSubmitted(true);
+        formRef.current?.reset();
+        setTimeout(() => setSubmitted(false), 7000);
+      } else {
+        setError(true);
+      }
+    } catch {
+      setError(true);
+    }
+    setSubmitting(false);
   };
 
   return (
@@ -588,9 +671,9 @@ function Contact() {
               <div>
                 <div className="contact-item-title">Address</div>
                 <div className="contact-item-body">
-                  Ninv Nishchay Foundation<br />
-                  Freeganj, Ujjain<br />
-                  Madhya Pradesh — 456010
+                  C/O Taiyabali Mohsinali<br />
+                  Kanchwala, Ingoria, Badnagar<br />
+                  Ujjain — 456222, Madhya Pradesh
                 </div>
               </div>
             </div>
@@ -600,8 +683,9 @@ function Contact() {
               <div>
                 <div className="contact-item-title">Email Us</div>
                 <div className="contact-item-body">
-                  info@ninvnishchay.org<br />
-                  donate@ninvnishchay.org
+                  <a href="mailto:ninvnishchayfoundation@gmail.com" style={{ color: "inherit" }}>
+                    ninvnishchayfoundation@gmail.com
+                  </a>
                 </div>
               </div>
             </div>
@@ -611,7 +695,7 @@ function Contact() {
               <div>
                 <div className="contact-item-title">Call / WhatsApp</div>
                 <div className="contact-item-body">
-                  +91 XXXXX XXXXX<br />
+                  <a href="tel:+916261724448" style={{ color: "inherit" }}>+91 62617 24448</a><br />
                   Mon – Sat, 10 AM – 6 PM
                 </div>
               </div>
@@ -639,31 +723,34 @@ function Contact() {
               Send us a Message
             </h3>
             <form ref={formRef} onSubmit={handleSubmit}>
+              {/* Honeypot field — hidden from real users, catches bots */}
+              <input type="text" name="_gotcha" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">First Name *</label>
-                  <input className="form-input" type="text" placeholder="Rahul" required />
+                  <input className="form-input" type="text" name="firstName" placeholder="Rahul" required />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Last Name *</label>
-                  <input className="form-input" type="text" placeholder="Sharma" required />
+                  <input className="form-input" type="text" name="lastName" placeholder="Sharma" required />
                 </div>
               </div>
 
               <div className="form-group">
                 <label className="form-label">Email Address *</label>
-                <input className="form-input" type="email" placeholder="rahul@example.com" required />
+                <input className="form-input" type="email" name="email" placeholder="rahul@example.com" required />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Phone Number</label>
-                <input className="form-input" type="tel" placeholder="+91 9876543210" />
+                <input className="form-input" type="tel" name="phone" placeholder="+91 9876543210" />
               </div>
 
               <div className="form-group">
                 <label className="form-label">Subject *</label>
-                <select className="form-select form-input" required>
-                  <option value="">Select a subject</option>
+                <select className="form-select form-input" name="subject" required defaultValue="">
+                  <option value="" disabled>Select a subject</option>
                   <option>General Enquiry</option>
                   <option>Volunteer with Us</option>
                   <option>Partnership / Collaboration</option>
@@ -677,18 +764,31 @@ function Contact() {
                 <label className="form-label">Message *</label>
                 <textarea
                   className="form-textarea"
+                  name="message"
                   placeholder="Tell us how you'd like to get involved or ask your question..."
                   required
                 />
               </div>
 
-              <button type="submit" className="form-submit">
-                Send Message ✉️
+              <button type="submit" className="form-submit" disabled={submitting}>
+                {submitting ? (
+                  <>
+                    <span className="form-spinner" /> Sending...
+                  </>
+                ) : (
+                  <>Send Message ✉️</>
+                )}
               </button>
 
               {submitted && (
                 <div className="form-success" style={{ display: "block" }}>
-                  Thank you! Your message has been sent. We'll get back to you within 2 business days.
+                  Thank you! Your message has been sent to ninvnishchayfoundation@gmail.com. We'll get back to you within 2 business days.
+                </div>
+              )}
+              {error && (
+                <div className="form-error" style={{ display: "block" }}>
+                  Something went wrong. Please email us directly at{" "}
+                  <a href="mailto:ninvnishchayfoundation@gmail.com">ninvnishchayfoundation@gmail.com</a>
                 </div>
               )}
             </form>
@@ -699,18 +799,20 @@ function Contact() {
   );
 }
 
+/* ─── FOOTER ────────────────────────────────────────────────────────────── */
 function Footer() {
-  const scroll = (id: string) => {
-    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="footer-brand-name">Ninv Nishchay Foundation</div>
-            <div className="footer-brand-tag">Dridh Sankalp, Ujjwal Bhavishya</div>
+            <div className="footer-logo-wrap">
+              <LogoIcon size={36} />
+              <div className="footer-logo-text">
+                <div className="footer-brand-name">Ninv Nishchay Foundation</div>
+                <div className="footer-brand-tag">Dridh Sankalp, Ujjwal Bhavishya</div>
+              </div>
+            </div>
             <p className="footer-brand-desc">
               A not-for-profit organization working for the upliftment of marginalized communities
               in Madhya Pradesh through health, education, and community development.
@@ -722,7 +824,7 @@ function Footer() {
             <ul className="footer-links">
               {[["#home","Home"],["#about","About Us"],["#programs","Our Work"],["#events","Events"],["#donate","Donate"],["#contact","Contact"]].map(([id, label]) => (
                 <li key={id}>
-                  <a href={id} onClick={(e) => { e.preventDefault(); scroll(id); }}>{label}</a>
+                  <a href={id} onClick={(e) => { e.preventDefault(); scrollTo(id); }}>{label}</a>
                 </li>
               ))}
             </ul>
@@ -732,7 +834,7 @@ function Footer() {
             <div className="footer-heading">Our Programs</div>
             <ul className="footer-links">
               {["Healthcare & Wellness","Education & Scholarships","Community Development","Women Empowerment","Environment","Food Security"].map((p) => (
-                <li key={p}><a href="#programs" onClick={(e) => { e.preventDefault(); scroll("#programs"); }}>{p}</a></li>
+                <li key={p}><a href="#programs" onClick={(e) => { e.preventDefault(); scrollTo("#programs"); }}>{p}</a></li>
               ))}
             </ul>
           </div>
@@ -741,15 +843,17 @@ function Footer() {
             <div className="footer-heading">Contact</div>
             <div className="footer-contact-item">
               <span>📍</span>
-              <span>Freeganj, Ujjain, Madhya Pradesh — 456010</span>
+              <span>Kanchwala, Ingoria, Badnagar, Ujjain — 456222, MP</span>
             </div>
             <div className="footer-contact-item">
               <span>✉️</span>
-              <span>info@ninvnishchay.org</span>
+              <a href="mailto:ninvnishchayfoundation@gmail.com" style={{ color: "inherit" }}>
+                ninvnishchayfoundation@gmail.com
+              </a>
             </div>
             <div className="footer-contact-item">
               <span>📞</span>
-              <span>+91 XXXXX XXXXX</span>
+              <a href="tel:+916261724448" style={{ color: "inherit" }}>+91 62617 24448</a>
             </div>
             <div className="footer-contact-item" style={{ marginTop: "8px" }}>
               <span>🕐</span>
@@ -766,15 +870,24 @@ function Footer() {
             CIN: <span>U88900MP2025NPL080689</span>
           </div>
         </div>
+        <div style={{ textAlign: "center", marginTop: "16px" }}>
+          <a
+            href="/admin-panel-nnf"
+            style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.18)", letterSpacing: "0.04em" }}
+          >
+            Admin
+          </a>
+        </div>
       </div>
     </footer>
   );
 }
 
+/* ─── WHATSAPP ──────────────────────────────────────────────────────────── */
 function WhatsAppButton() {
   return (
     <a
-      href="https://wa.me/919999999999?text=Hello%20Ninv%20Nishchay%20Foundation%2C%20I%27d%20like%20to%20know%20more%20about%20your%20work."
+      href="https://wa.me/916261724448?text=Hello%20Ninv%20Nishchay%20Foundation%2C%20I%27d%20like%20to%20know%20more%20about%20your%20work."
       target="_blank"
       rel="noopener noreferrer"
       className="whatsapp-btn"
@@ -787,8 +900,19 @@ function WhatsAppButton() {
   );
 }
 
-export default function App() {
-  useReveal();
+/* ─── MAIN SITE LAYOUT ──────────────────────────────────────────────────── */
+function MainSite() {
+  const [events, setEvents] = useState<NNFEvent[]>(loadEvents);
+
+  // Reload events from localStorage if Admin Panel updates them
+  useEffect(() => {
+    const onStorage = () => setEvents(loadEvents());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  // Static section reveal (About, Programs, etc.)
+  useReveal([]);
 
   return (
     <>
@@ -797,12 +921,24 @@ export default function App() {
         <Hero />
         <About />
         <Programs />
-        <Events />
+        <Events events={events} />
         <Donate />
         <Contact />
       </main>
       <Footer />
       <WhatsAppButton />
     </>
+  );
+}
+
+/* ─── APP WITH ROUTING ──────────────────────────────────────────────────── */
+export default function App() {
+  return (
+    <Router base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+      <Switch>
+        <Route path="/admin-panel-nnf" component={AdminPanel} />
+        <Route component={MainSite} />
+      </Switch>
+    </Router>
   );
 }
