@@ -1,0 +1,133 @@
+Got it! The NGO is a **general-purpose NGO** where agriculture & farmer welfare is the **featured/highlighted focus**, but they still do health, education, women empowerment, community development, and environment work too. Here's the corrected prompt:
+
+---
+
+## 🌾 Replit Correction Prompt — Fix NGO Focus Balance
+
+> **This corrects the previous update. Agriculture is the highlighted theme, NOT the only theme. Restore the full range of NGO programs while keeping agriculture as the primary identity.**
+
+---
+
+### CORRECTION 1 — Fix Hero & About Text
+
+**Hero description — replace with:**
+```
+A firm resolve for a brighter tomorrow. Ninv Nishchay Foundation works for the upliftment of marginalized communities across Madhya Pradesh — with a special focus on farmers and natural agriculture — through programs in health, education, women empowerment, and sustainable community development.
+```
+
+**Hero stats — update to:**
+- "500+" Lives Impacted
+- "10+" Programs Running
+- "3" Districts Covered
+
+**About section body text — replace with:**
+```
+Ninv Nishchay Foundation (CIN: U88900MP2025NPL080689) is a registered Section 8 not-for-profit company founded in December 2025, headquartered in Ujjain — the heart of Malwa's agricultural belt in Madhya Pradesh.
+
+We are a community-driven NGO working across multiple areas of social welfare, with a strong emphasis on supporting farmers and promoting sustainable, natural agriculture. Alongside our agricultural programs, we run initiatives in rural healthcare, children's education, women's empowerment, environmental conservation, and food security — because we believe true development is holistic.
+
+Our volunteers, donors, and partner organizations form a growing movement rooted in compassion, integrity, and an unwavering resolve to serve without discrimination.
+```
+
+**Mission / Vision / Values — update to:**
+- 🎯 Mission: *"To empower farmers, rural families, and marginalized communities through sustainable agriculture, accessible healthcare, quality education, and holistic development programs across Madhya Pradesh."*
+- 🔭 Vision: *"A self-reliant, equitable society where farmers are respected, rural communities thrive, and every individual has access to dignity, opportunity, and a secure livelihood."*
+- 🌾 Values: *"Integrity, compassion, respect for nature and farmers, inclusivity, transparency, and an unwavering resolve to serve communities without discrimination."*
+
+---
+
+### CORRECTION 2 — Restore Full 6 Programs (Agriculture highlighted, others kept)
+
+Replace the programs grid with this balanced mix — agriculture first as the hero program, then the other standard NGO programs:
+
+```
+1. Title: "Natural Farming & Agriculture"
+   Icon: 🌾
+   Tag: Agriculture  ← use a golden/accent color for this tag to make it stand out
+   Desc: "Our flagship program — training farmers in chemical-free, natural farming techniques using indigenous seeds, cow-based inputs, and traditional wisdom. We help reduce input costs, restore soil health, and connect farmers to organic markets."
+   Image: https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=80
+
+2. Title: "Healthcare & Wellness"
+   Icon: 🏥
+   Tag: Health
+   Desc: "Free medical camps, medicines, and health awareness drives for underprivileged families in rural and urban areas of Ujjain district — with special attention to pesticide-related illnesses in farming communities."
+   Image: https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80
+
+3. Title: "Education & Scholarships"
+   Icon: 📚
+   Tag: Education
+   Desc: "Scholarships for meritorious students from economically weaker sections, digital literacy training, free coaching, and school supply distribution — especially for children of farmers and rural families."
+   Image: https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80
+
+4. Title: "Women Empowerment"
+   Icon: 👩‍💼
+   Tag: Women
+   Desc: "Vocational training, self-help groups, and entrepreneurship support for rural women — including kitchen gardening, food processing from farm produce, tailoring, and legal awareness programs."
+   Image: https://images.unsplash.com/photo-1596810435345-05adcf636d6a?w=600&q=80
+
+5. Title: "Community Development"
+   Icon: 🏘️
+   Tag: Community
+   Desc: "Skill development workshops, livelihood support, farmer collectives, and infrastructure initiatives to uplift entire villages and rural communities in Madhya Pradesh."
+   Image: https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80
+
+6. Title: "Environment & Water Conservation"
+   Icon: 🌳
+   Tag: Environment
+   Desc: "Tree plantation drives, watershed management, rainwater harvesting, and cleanliness campaigns — protecting agricultural land and ensuring long-term water availability for farming communities."
+   Image: https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80
+```
+
+**Make the Agriculture program card visually distinct** — give it a subtle golden border or a small "🌟 Flagship Program" badge in the top corner using CSS so it stands out from the other 5 cards:
+
+```css
+.program-card:first-child {
+  border-color: var(--accent);
+  box-shadow: 0 4px 20px rgba(200, 169, 43, 0.2);
+  position: relative;
+}
+
+.program-card:first-child::before {
+  content: '★ Flagship Program';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent);
+  color: var(--text-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  letter-spacing: 0.05em;
+  z-index: 2;
+}
+```
+
+Also make the Agriculture program tag use the accent/golden color instead of the default green, so it visually stands out from other tags.
+
+---
+
+### CORRECTION 3 — Fix Footer Quick Links
+
+Update the "Our Programs" quick links in the footer to match the corrected 6 program names:
+- Natural Farming & Agriculture
+- Healthcare & Wellness
+- Education & Scholarships
+- Women Empowerment
+- Community Development
+- Environment & Water Conservation
+
+---
+
+### WHAT TO KEEP UNCHANGED
+
+- All events remain the same (they already cover a good mix of health, education, environment, community)
+- The donate section, contact section, admin panel, bug fixes, images, phone/email — all unchanged from previous updates
+- Layout, colors, fonts, routing — unchanged
+- The QR code on the home page strip — keep it
+
+---
+
+### SUMMARY
+
+The NGO is a **full-spectrum welfare organization**. Agriculture and farmer support is the **highlighted identity and flagship program** — featured first, styled distinctly — but the foundation equally serves health, education, women, community, and environment causes. The site should feel like a well-rounded NGO that **leads with agriculture** rather than an agriculture-only organization.

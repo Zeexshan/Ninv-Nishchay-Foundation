@@ -251,8 +251,10 @@ function Hero() {
           </h1>
           <p className="hero-tagline">"Dridh Sankalp, Ujjwal Bhavishya"</p>
           <p className="hero-desc">
-            A firm resolve for a brighter tomorrow. We work for the upliftment of marginalized communities
-            in Madhya Pradesh through education, healthcare, and holistic community development.
+            A firm resolve for a brighter tomorrow. Ninv Nishchay Foundation works for the upliftment of
+            marginalized communities across Madhya Pradesh — with a special focus on farmers and natural
+            agriculture — through programs in health, education, women empowerment, and sustainable
+            community development.
           </p>
           <div className="hero-actions">
             <a
@@ -278,7 +280,7 @@ function Hero() {
             <span className="hero-stat-label">Lives Impacted</span>
           </div>
           <div className="hero-stat">
-            <span className="hero-stat-num">8+</span>
+            <span className="hero-stat-num">10+</span>
             <span className="hero-stat-label">Programs Running</span>
           </div>
           <div className="hero-stat">
@@ -314,15 +316,20 @@ function About() {
             <span className="section-label">About Us</span>
             <h2 className="section-heading">Who We Are</h2>
             <p className="about-body">
-              Ninv Nishchay Foundation (CIN: U88900MP2025NPL080689) is a not-for-profit organization
-              registered under the Companies Act, 2013 in Madhya Pradesh. Founded in 2025 and headquartered
-              in Ujjain — the city of faith — we are committed to fostering sustainable change through
-              grassroots programs in health, education, environment, and women's empowerment.
+              Ninv Nishchay Foundation (CIN: U88900MP2025NPL080689) is a registered Section 8
+              not-for-profit company founded in December 2025, headquartered in Ujjain — the heart of
+              Malwa's agricultural belt in Madhya Pradesh.
             </p>
             <p className="about-body" style={{ marginTop: "-20px" }}>
-              We believe that every individual, regardless of their social or economic background,
-              deserves dignity, opportunity, and a fair chance at a fulfilling life. Our volunteers,
-              donors, and partner organizations form a growing movement rooted in compassion and resolve.
+              We are a community-driven NGO working across multiple areas of social welfare, with a
+              strong emphasis on supporting farmers and promoting sustainable, natural agriculture.
+              Alongside our agricultural programs, we run initiatives in rural healthcare, children's
+              education, women's empowerment, environmental conservation, and food security — because
+              we believe true development is holistic.
+            </p>
+            <p className="about-body" style={{ marginTop: "-20px" }}>
+              Our volunteers, donors, and partner organizations form a growing movement rooted in
+              compassion, integrity, and an unwavering resolve to serve without discrimination.
             </p>
 
             <div className="mvv-grid">
@@ -330,24 +337,26 @@ function About() {
                 <div className="mvv-icon">🎯</div>
                 <div className="mvv-title">Our Mission</div>
                 <div className="mvv-body">
-                  To empower marginalized communities through sustainable, people-centric programs that
-                  create lasting change across Madhya Pradesh.
+                  To empower farmers, rural families, and marginalized communities through sustainable
+                  agriculture, accessible healthcare, quality education, and holistic development
+                  programs across Madhya Pradesh.
                 </div>
               </div>
               <div className="mvv-card">
                 <div className="mvv-icon">🔭</div>
                 <div className="mvv-title">Our Vision</div>
                 <div className="mvv-body">
-                  A just and equitable society where every citizen has access to health, education,
-                  and opportunity regardless of their circumstances.
+                  A self-reliant, equitable society where farmers are respected, rural communities
+                  thrive, and every individual has access to dignity, opportunity, and a secure
+                  livelihood.
                 </div>
               </div>
               <div className="mvv-card">
-                <div className="mvv-icon">❤️</div>
+                <div className="mvv-icon">🌾</div>
                 <div className="mvv-title">Our Values</div>
                 <div className="mvv-body">
-                  Integrity, compassion, inclusivity, transparency, and a firm resolve to serve
-                  without discrimination.
+                  Integrity, compassion, respect for nature and farmers, inclusivity, transparency,
+                  and an unwavering resolve to serve communities without discrimination.
                 </div>
               </div>
             </div>
@@ -362,46 +371,52 @@ function About() {
 function Programs() {
   const programs = [
     {
+      title: "Natural Farming & Agriculture",
+      icon: "🌾",
+      desc: "Our flagship program — training farmers in chemical-free, natural farming techniques using indigenous seeds, cow-based inputs, and traditional wisdom. We help reduce input costs, restore soil health, and connect farmers to organic markets.",
+      image: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=80",
+      tag: "Agriculture",
+      flagship: true,
+    },
+    {
       title: "Healthcare & Wellness",
       icon: "🏥",
-      desc: "Free medical camps, medicines, and health awareness drives for underprivileged families in rural and urban slums across Ujjain district.",
+      desc: "Free medical camps, medicines, and health awareness drives for underprivileged families in rural and urban areas of Ujjain district — with special attention to pesticide-related illnesses in farming communities.",
       image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
       tag: "Health",
+      flagship: false,
     },
     {
       title: "Education & Scholarships",
       icon: "📚",
-      desc: "Scholarships for meritorious students, digital literacy training, free coaching classes, and school supply distribution for children from EWS families.",
+      desc: "Scholarships for meritorious students from economically weaker sections, digital literacy training, free coaching, and school supply distribution — especially for children of farmers and rural families.",
       image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
       tag: "Education",
-    },
-    {
-      title: "Community Development",
-      icon: "🏘️",
-      desc: "Skill development workshops, livelihood support, women's self-help groups, and infrastructure projects to uplift entire communities.",
-      image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
-      tag: "Community",
-    },
-    {
-      title: "Environment & Green India",
-      icon: "🌳",
-      desc: "Plantation drives, cleanliness campaigns, waste management awareness, and river conservation activities across Madhya Pradesh.",
-      image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
-      tag: "Environment",
+      flagship: false,
     },
     {
       title: "Women Empowerment",
       icon: "👩‍💼",
-      desc: "Vocational training, legal awareness camps, support for women entrepreneurs, and initiatives to combat gender-based violence.",
+      desc: "Vocational training, self-help groups, and entrepreneurship support for rural women — including kitchen gardening, food processing from farm produce, tailoring, and legal awareness programs.",
       image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&q=80",
       tag: "Women",
+      flagship: false,
     },
     {
-      title: "Food & Nutrition Security",
-      icon: "🍱",
-      desc: "Community kitchens, nutrition programs for children and elderly, food distribution during festivals and natural calamities.",
-      image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80",
-      tag: "Nutrition",
+      title: "Community Development",
+      icon: "🏘️",
+      desc: "Skill development workshops, livelihood support, farmer collectives, and infrastructure initiatives to uplift entire villages and rural communities in Madhya Pradesh.",
+      image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
+      tag: "Community",
+      flagship: false,
+    },
+    {
+      title: "Environment & Water Conservation",
+      icon: "🌳",
+      desc: "Tree plantation drives, watershed management, rainwater harvesting, and cleanliness campaigns — protecting agricultural land and ensuring long-term water availability for farming communities.",
+      image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
+      tag: "Environment",
+      flagship: false,
     },
   ];
 
@@ -418,13 +433,19 @@ function Programs() {
 
         <div className="programs-grid">
           {programs.map((p, i) => (
-            <div className="program-card reveal" key={i} style={{ transitionDelay: `${i * 60}ms` }}>
+            <div
+              className={`program-card reveal${p.flagship ? " program-card--flagship" : ""}`}
+              key={i}
+              style={{ transitionDelay: `${i * 60}ms` }}
+            >
               <img className="program-img" src={p.image} alt={p.title} loading="lazy" />
               <div className="program-body">
                 <div className="program-icon">{p.icon}</div>
                 <h3 className="program-title">{p.title}</h3>
                 <p className="program-desc">{p.desc}</p>
-                <span className="program-tag">{p.tag}</span>
+                <span className={`program-tag${p.flagship ? " program-tag--agriculture" : ""}`}>
+                  {p.tag}
+                </span>
               </div>
             </div>
           ))}
