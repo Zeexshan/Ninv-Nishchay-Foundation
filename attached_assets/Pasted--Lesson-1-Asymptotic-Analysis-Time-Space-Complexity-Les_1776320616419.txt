@@ -1,0 +1,115 @@
+# Lesson 1: Asymptotic Analysis & Time/Space Complexity
+
+[Lesson 2: Mathematical Foundations](https://www.notion.so/Lesson-2-Mathematical-Foundations-341460275e2f809c8092cf8b373b17cb?pvs=21)
+
+[Lesson 3: Arrays & Strings](https://www.notion.so/Lesson-3-Arrays-Strings-343460275e2f8010b1ccfcb633c7bf56?pvs=21)
+
+---
+
+## Replit Prompt — 3 Specific Changes Only
+
+> Do exactly these 3 things. Nothing else.
+> 
+
+---
+
+### CHANGE 1 — Update Address Everywhere
+
+Search the entire codebase for every place the address appears. Replace all instances with exactly this:
+
+```
+C/O Ingoria, Badnagar Ujjain — 456222, Madhya Pradesh
+```
+
+Check these specific locations:
+
+- Contact section `contact-item` with the 📍 icon
+- Footer `footer-contact-item` with the 📍 icon
+- Any meta tags in `index.html`
+- The `cin-box` area near the address
+
+Do not change any other text around it. Only the address string itself.
+
+---
+
+### CHANGE 2 — Reorder Donate Section (QR First, Bank Details Second)
+
+**First (do this only if applicable)  — if a `QuickDonateStrip` component was added to the homepage in a previous update, remove it completely.** Delete the component definition and remove `<QuickDonateStrip />` from the App return statement. The homepage should go straight from `<Hero />` to `<About />`.
+
+**Second — fix the layout inside the existing `Donate` section.**
+
+Open `App.tsx` and find the `Donate` component. Currently it has a two-column grid with `donate-content` on the left and `qr-panel` on the right. The client wants a different layout specifically on mobile — but actually the client wants the QR to appear visually between the intro text and the bank details regardless of screen size.
+
+---
+
+### CHANGE 3 — Indian People Images Only
+
+Replace every image URL in `App.tsx` with these. These are verified Unsplash photos showing Indian people and Indian settings. Do not keep any old URL — replace every single one:
+
+**Program cards — use these in order:**
+
+```
+1. Agriculture/Farming:
+https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=80
+
+2. Healthcare:
+https://thumbs.dreamstime.com/b/ngo-activity-doctor-examine-child-health-clinic-center-which-organized-half-india-s-children-under-age-63979746.jpg
+
+3. Education:
+https://images.unsplash.com/photo-1652858672796-960164bd632b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+
+4. Women Empowerment:
+https://www.webpulsefoundation.org/uploaded-files/category/images/thumbs/Women-Empowerment-thumbs-500X500.jpg
+
+5. Community:
+https://plus.unsplash.com/premium_photo-1723795405075-ba40a9d25dac?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D
+
+6. Environment:
+https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80
+```
+
+**Event cards — replace in this exact order matching each event:**
+
+```
+Event 1 (Clothes/Poshak Daan):
+https://st5.depositphotos.com/85374488/70881/i/450/depositphotos_708816192-stock-photo-school-children-teacher-ngo-patang.jpg
+
+Event 2 (Blood Donation):
+https://www.shutterstock.com/image-photo/delhi-india-june-19-2023-600nw-2370827869.jpg
+
+Event 3 (Cleanliness/Swachh Bharat):
+https://media.gettyimages.com/id/524106594/photo/new-delhi-india-bjp-workers-participate-in-cleaning-the-yamuna-river-during-atal-clean-yamuna.jpg?s=612x612&w=0&k=20&c=0rcc3CN6Y2Nvl8PJjkXPca1igXBwqgFiVpbwWq8rqbw=
+
+Event 4 (Health Camp):
+https://thumbs.dreamstime.com/b/ngo-activity-doctor-examine-child-health-clinic-center-which-organized-half-india-s-children-under-age-63979746.jpg
+
+Event 5 (Scholarship/Education):
+https://images.unsplash.com/photo-1524069290683-0457abfe42c3?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kaWFuJTIwc3R1ZGVudHN8ZW58MHx8MHx8fDA%3D
+
+Event 6 (Women Workshop):
+https://plus.unsplash.com/premium_photo-1681483573122-ab391ec07a87?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8d29tZW4lMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D
+
+Event 7 (Tree Plantation):
+https://images.unsplash.com/photo-1625758476104-f2ed6c81248f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJlZSUyMHBsYW50YXRpb258ZW58MHx8MHx8fDA%3D
+
+Event 8 ( /Food):
+https://www.shutterstock.com/image-photo/new-delhi-india-march-12-600nw-1952430571.jpg
+```
+
+**After replacing everything, scan the file one more time.** If any Unsplash URL still exists that is NOT in the list above, replace it with `https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80` as the safe default (Indian people community photo).
+
+---
+
+### SECURITY NOTE
+
+This is a static React frontend with no backend authentication, no user accounts, no API keys, no database connection, and no server. The security hardening instructions in the previous message do not apply here because there is no authentication system, no API endpoints, no user data, and no server to secure. The only data stored is events in localStorage which is client-side only. No action needed on security for this project in its current form.
+
+---
+
+### FINAL CHECKLIST
+
+- [ ]  Address updated to `C/O Ingoria, Badnagar Ujjain — 456222, Madhya Pradesh` in all locations
+- [ ]  `QuickDonateStrip` removed from homepage if it exists
+- [ ]  Donate section now shows: intro text → QR code → bank details (top to bottom, centered)
+- [ ]  Every single image URL replaced with Indian-people Unsplash photos
+- [ ]  Nothing else changed

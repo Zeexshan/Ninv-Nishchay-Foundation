@@ -13,7 +13,7 @@ const DEFAULT_EVENTS = [
     id: 1,
     title: "Poshak Daan — Winter Clothes Distribution",
     date: "2025-01-15",
-    image: "https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&q=80",
+    image: "https://st5.depositphotos.com/85374488/70881/i/450/depositphotos_708816192-stock-photo-school-children-teacher-ngo-patang.jpg",
     location: "Multiple locations, Ujjain",
     description: "Collection and distribution of warm clothes, blankets, and essentials to homeless and destitute families ahead of winter.",
     tags: ["Community", "Relief"],
@@ -22,7 +22,7 @@ const DEFAULT_EVENTS = [
     id: 2,
     title: "Makar Sankranti Blood Donation Camp",
     date: "2025-01-14",
-    image: "https://images.unsplash.com/photo-1615461066159-fea0960485d5?w=600&q=80",
+    image: "https://www.shutterstock.com/image-photo/delhi-india-june-19-2023-600nw-2370827869.jpg",
     location: "Civil Hospital, Ujjain",
     description: "A community blood donation drive held in collaboration with civil hospital. Over 80 units collected, benefiting hundreds of patients.",
     tags: ["Health"],
@@ -31,7 +31,7 @@ const DEFAULT_EVENTS = [
     id: 3,
     title: "Swachh Bharat Abhiyan — Community Cleanliness Drive",
     date: "2026-04-22",
-    image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
+    image: "https://media.gettyimages.com/id/524106594/photo/new-delhi-india-bjp-workers-participate-in-cleaning-the-yamuna-river-during-atal-clean-yamuna.jpg?s=612x612&w=0&k=20&c=0rcc3CN6Y2Nvl8PJjkXPca1igXBwqgFiVpbwWq8rqbw=",
     location: "Mahakal Temple Road, Ujjain",
     description: "Join us for a city-wide cleanliness campaign. Volunteers will clean public spaces, plant saplings, and spread awareness about sanitation.",
     tags: ["Environment"],
@@ -40,7 +40,7 @@ const DEFAULT_EVENTS = [
     id: 4,
     title: "Health Camp — Free Medical Checkup",
     date: "2026-05-10",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
+    image: "https://thumbs.dreamstime.com/b/ngo-activity-doctor-examine-child-health-clinic-center-which-organized-half-india-s-children-under-age-63979746.jpg",
     location: "Community Hall, Freeganj, Ujjain",
     description: "Free health checkups, blood tests, and medicine distribution for underprivileged families. Expert doctors will be on site.",
     tags: ["Health"],
@@ -49,7 +49,7 @@ const DEFAULT_EVENTS = [
     id: 5,
     title: "Shiksha Utsav — Scholarship Distribution Ceremony",
     date: "2026-06-05",
-    image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1524069290683-0457abfe42c3?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW5kaWFuJTIwc3R1ZGVudHN8ZW58MHx8MHx8fDA%3D",
     location: "Vikram University Grounds, Ujjain",
     description: "Annual scholarship awards for meritorious students from economically weaker sections. Over 50 students to be felicitated this year.",
     tags: ["Education"],
@@ -58,7 +58,7 @@ const DEFAULT_EVENTS = [
     id: 6,
     title: "Mahila Shakti Workshop — Women's Skill Development",
     date: "2026-06-22",
-    image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&q=80",
+    image: "https://plus.unsplash.com/premium_photo-1681483573122-ab391ec07a87?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8d29tZW4lMjBpbmRpYXxlbnwwfHwwfHx8MA%3D%3D",
     location: "Ninv Nishchay Centre, Ujjain",
     description: "A two-day workshop empowering women with skills in tailoring, digital literacy, and entrepreneurship to support self-reliance.",
     tags: ["Women", "Skills"],
@@ -67,7 +67,7 @@ const DEFAULT_EVENTS = [
     id: 7,
     title: "Vriksh Mitra — Tree Plantation Drive",
     date: "2026-07-14",
-    image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&q=80",
+    image: "https://images.unsplash.com/photo-1625758476104-f2ed6c81248f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJlZSUyMHBsYW50YXRpb258ZW58MHx8MHx8fDA%3D",
     location: "Various locations, Ujjain District",
     description: "Plantation of 500+ native trees across Ujjain district in collaboration with local schools and Gram Panchayats.",
     tags: ["Environment"],
@@ -76,7 +76,7 @@ const DEFAULT_EVENTS = [
     id: 8,
     title: "Annadaan Mahotsav — Community Feast & Food Drive",
     date: "2026-09-02",
-    image: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&q=80",
+    image: "https://www.shutterstock.com/image-photo/new-delhi-india-march-12-600nw-1952430571.jpg",
     location: "Ram Ghat, Ujjain",
     description: "A grand community feast serving thousands of underprivileged citizens, combined with dry ration distribution for 200+ families.",
     tags: ["Nutrition", "Community"],
@@ -238,7 +238,7 @@ function Hero() {
     <section className="hero" id="home">
       <div
         className="hero-bg"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1532375810709-75b1da00537c?w=1600&q=80')" }}
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80')" }}
       />
       <div className="hero-overlay" />
       <div className="hero-pattern" />
@@ -303,7 +303,7 @@ function About() {
           <div className="about-img-wrap reveal">
             <img
               className="about-img-main"
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&q=80"
+              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
               alt="Ninv Nishchay Foundation volunteers in India"
             />
             <div className="about-img-badge">
@@ -382,7 +382,7 @@ function Programs() {
       title: "Healthcare & Wellness",
       icon: "🏥",
       desc: "Free medical camps, medicines, and health awareness drives for underprivileged families in rural and urban areas of Ujjain district — with special attention to pesticide-related illnesses in farming communities.",
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
+      image: "https://thumbs.dreamstime.com/b/ngo-activity-doctor-examine-child-health-clinic-center-which-organized-half-india-s-children-under-age-63979746.jpg",
       tag: "Health",
       flagship: false,
     },
@@ -390,7 +390,7 @@ function Programs() {
       title: "Education & Scholarships",
       icon: "📚",
       desc: "Scholarships for meritorious students from economically weaker sections, digital literacy training, free coaching, and school supply distribution — especially for children of farmers and rural families.",
-      image: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80",
+      image: "https://images.unsplash.com/photo-1652858672796-960164bd632b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       tag: "Education",
       flagship: false,
     },
@@ -398,7 +398,7 @@ function Programs() {
       title: "Women Empowerment",
       icon: "👩‍💼",
       desc: "Vocational training, self-help groups, and entrepreneurship support for rural women — including kitchen gardening, food processing from farm produce, tailoring, and legal awareness programs.",
-      image: "https://images.unsplash.com/photo-1573497019236-17f8177b81e8?w=600&q=80",
+      image: "https://www.webpulsefoundation.org/uploaded-files/category/images/thumbs/Women-Empowerment-thumbs-500X500.jpg",
       tag: "Women",
       flagship: false,
     },
@@ -406,7 +406,7 @@ function Programs() {
       title: "Community Development",
       icon: "🏘️",
       desc: "Skill development workshops, livelihood support, farmer collectives, and infrastructure initiatives to uplift entire villages and rural communities in Madhya Pradesh.",
-      image: "https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600&q=80",
+      image: "https://plus.unsplash.com/premium_photo-1723795405075-ba40a9d25dac?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       tag: "Community",
       flagship: false,
     },
@@ -577,8 +577,9 @@ function Donate() {
   return (
     <section className="donate" id="donate">
       <div className="container">
-        <div className="donate-inner">
-          <div className="donate-content reveal">
+        <div className="donate-inner" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px" }}>
+
+          <div className="donate-content reveal" style={{ textAlign: "center", maxWidth: "680px" }}>
             <span className="section-label">Fund Us</span>
             <h2 className="section-heading">Support Our Mission</h2>
             <p className="donate-message">
@@ -590,7 +591,25 @@ function Donate() {
               Scan the QR code to donate instantly via UPI, or use the bank details below.
               Donations to Ninv Nishchay Foundation are eligible for tax benefits under applicable provisions.
             </p>
+          </div>
 
+          <div className="qr-panel reveal" style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div className="qr-box">
+              <img
+                className="qr-code"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=ninvnishchayfoundation@gmail.com%26pn=NinvNishchayFoundation%26cu=INR&color=556020&bgcolor=F5F7EC"
+                alt="UPI QR Code — ninvnishchayfoundation@gmail.com"
+              />
+              <div className="qr-title">Ninv Nishchay Foundation</div>
+              <div className="qr-sub">Scan to donate via any UPI app</div>
+              <div className="upi-id">ninvnishchayfoundation@gmail.com</div>
+            </div>
+            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.82rem", textAlign: "center", maxWidth: "280px", marginTop: "12px" }}>
+              PayTM · PhonePe · Google Pay · BHIM · any UPI app
+            </p>
+          </div>
+
+          <div className="donate-content reveal" style={{ maxWidth: "680px", width: "100%" }}>
             <div className="bank-details">
               <h4>Bank Transfer Details</h4>
               <div className="bank-row">
@@ -620,21 +639,6 @@ function Donate() {
             </div>
           </div>
 
-          <div className="qr-panel reveal">
-            <div className="qr-box">
-              <img
-                className="qr-code"
-                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=upi://pay?pa=ninvnishchayfoundation@gmail.com%26pn=NinvNishchayFoundation%26cu=INR&color=556020&bgcolor=F5F7EC"
-                alt="UPI QR Code — ninvnishchayfoundation@gmail.com"
-              />
-              <div className="qr-title">Ninv Nishchay Foundation</div>
-              <div className="qr-sub">Scan to donate via any UPI app</div>
-              <div className="upi-id">ninvnishchayfoundation@gmail.com</div>
-            </div>
-            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.82rem", textAlign: "center", maxWidth: "280px" }}>
-              PayTM · PhonePe · Google Pay · BHIM · any UPI app
-            </p>
-          </div>
         </div>
       </div>
     </section>
@@ -692,9 +696,7 @@ function Contact() {
               <div>
                 <div className="contact-item-title">Address</div>
                 <div className="contact-item-body">
-                  C/O Taiyabali Mohsinali<br />
-                  Kanchwala, Ingoria, Badnagar<br />
-                  Ujjain — 456222, Madhya Pradesh
+                  C/O Ingoria, Badnagar Ujjain — 456222, Madhya Pradesh
                 </div>
               </div>
             </div>
@@ -864,7 +866,7 @@ function Footer() {
             <div className="footer-heading">Contact</div>
             <div className="footer-contact-item">
               <span>📍</span>
-              <span>Kanchwala, Ingoria, Badnagar, Ujjain — 456222, MP</span>
+              <span>C/O Ingoria, Badnagar Ujjain — 456222, Madhya Pradesh</span>
             </div>
             <div className="footer-contact-item">
               <span>✉️</span>
